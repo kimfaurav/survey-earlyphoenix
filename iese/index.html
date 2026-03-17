@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IESE Strategy Topics Survey</title>
+    <style>
+        :root {
+            --navy: #1a2332;
+            --navy-light: #243044;
+            --gold: #c8a45c;
+            --gold-light: #d4b876;
+            --white: #ffffff;
+            --gray-50: #f8f9fa;
+            --gray-100: #f0f1f3;
+            --gray-200: #e2e4e8;
+            --gray-400: #9ea3ad;
+            --gray-600: #6b7280;
+            --gray-800: #374151;
+            --green: #22c55e;
+            --red: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: var(--navy);
+            color: var(--white);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+        }
+
+        .header h1 {
+            font-size: 1.4rem;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .header .subtitle {
+            font-size: 0.85rem;
+            color: var(--gold);
+            margin-top: 0.3rem;
+            font-style: italic;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            background: var(--navy-light);
+            padding: 0.5rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: sticky;
+            top: 72px;
+            z-index: 99;
+        }
+
+        .progress-track {
+            flex: 1;
+            height: 4px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gold);
+            border-radius: 2px;
+            transition: width 0.4s ease;
+        }
+
+        .progress-text {
+            color: var(--gold-light);
+            font-size: 0.75rem;
+            min-width: 80px;
+            text-align: right;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Welcome screen */
+        .welcome {
+            max-width: 640px;
+            margin: 3rem auto;
+            padding: 2.5rem;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+        }
+
+        .welcome h2 {
+            font-size: 1.8rem;
+            color: var(--navy);
+            margin-bottom: 1rem;
+        }
+
+        .welcome p {
+            line-height: 1.7;
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+        }
+
+        .welcome .instructions {
+            background: var(--gray-50);
+            border-left: 3px solid var(--gold);
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .welcome .instructions p {
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .welcome .instructions p:last-child {
+            margin-bottom: 0;
+        }
+
+        .name-input {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .name-input label {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .name-input input {
+            padding: 0.85rem 1rem;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 1.05rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        .name-input input:focus {
+            border-color: var(--gold);
+        }
+
+        .name-input .error {
+            color: var(--red);
+            font-size: 0.85rem;
+            display: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* Topic card */
+        .topic-card {
+            max-width: 720px;
+            margin: 2rem auto;
+            padding: 0;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+            overflow: hidden;
+        }
+
+        .topic-number {
+            background: var(--navy);
+            color: var(--gold);
+            padding: 0.75rem 2rem;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .topic-content {
+            padding: 2rem 2.5rem;
+        }
+
+        .topic-content h2 {
+            font-size: 1.6rem;
+            color: var(--navy);
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .topic-content .category {
+            color: var(--gold);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1.5rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .topic-content .description {
+            line-height: 1.8;
+            color: var(--gray-600);
+            font-size: 1.02rem;
+        }
+
+        .topic-content .description p {
+            margin-bottom: 1rem;
+        }
+
+        .topic-content .key-questions {
+            background: var(--gray-50);
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .topic-content .key-questions h4 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--navy);
+            margin-bottom: 0.75rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .topic-content .key-questions ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .topic-content .key-questions li {
+            padding: 0.35rem 0;
+            padding-left: 1.2rem;
+            position: relative;
+            color: var(--gray-600);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .topic-content .key-questions li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.7rem;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gold);
+        }
+
+        /* Ranking section */
+        .ranking-section {
+            max-width: 720px;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+        }
+
+        .ranking-section h2 {
+            font-size: 1.5rem;
+            color: var(--navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .ranking-section > p {
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .ranking-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .ranking-item:hover {
+            border-color: var(--gold-light);
+            background: rgba(200, 164, 92, 0.03);
+        }
+
+        .ranking-item.selected {
+            border-color: var(--gold);
+            background: rgba(200, 164, 92, 0.06);
+        }
+
+        .ranking-item .rank-badge {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--gray-100);
+            color: var(--gray-400);
+            transition: all 0.2s;
+        }
+
+        .ranking-item.selected .rank-badge {
+            background: var(--gold);
+            color: var(--white);
+        }
+
+        .ranking-item .rank-title {
+            font-size: 0.95rem;
+            color: var(--gray-800);
+            flex: 1;
+        }
+
+        .ranking-item .rank-buttons {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .rank-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 6px;
+            border: 1.5px solid var(--gray-200);
+            background: var(--white);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            transition: all 0.15s;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .rank-btn:hover {
+            border-color: var(--gold);
+            color: var(--navy);
+        }
+
+        .rank-btn.active {
+            background: var(--navy);
+            border-color: var(--navy);
+            color: var(--gold);
+        }
+
+        .ranking-summary {
+            margin-top: 2rem;
+            padding: 1.25rem;
+            background: var(--gray-50);
+            border-radius: 8px;
+        }
+
+        .ranking-summary h4 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--navy);
+            margin-bottom: 0.75rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .ranking-summary .slot {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .ranking-summary .slot-number {
+            font-weight: 700;
+            color: var(--gold);
+            font-size: 1.1rem;
+            width: 24px;
+        }
+
+        .ranking-summary .slot-name {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+        }
+
+        .ranking-summary .slot-name.filled {
+            color: var(--navy);
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.85rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--navy);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--navy-light);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-gold {
+            background: var(--gold);
+            color: var(--white);
+        }
+
+        .btn-gold:hover {
+            background: var(--gold-light);
+        }
+
+        .btn-gold:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--navy);
+            border: 1.5px solid var(--gray-200);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--navy);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            max-width: 720px;
+            margin: 1.5rem auto 3rem;
+            padding: 0 1rem;
+        }
+
+        .nav-buttons .right {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        /* Confirmation */
+        .confirmation {
+            max-width: 640px;
+            margin: 3rem auto;
+            padding: 3rem 2.5rem;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+            text-align: center;
+        }
+
+        .confirmation .check-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: #dcfce7;
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .confirmation h2 {
+            color: var(--navy);
+            margin-bottom: 1rem;
+        }
+
+        .confirmation p {
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(26, 35, 50, 0.7);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,255,255,0.2);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Mobile */
+        @media (max-width: 640px) {
+            .welcome, .topic-card, .ranking-section, .confirmation {
+                margin: 1rem;
+                border-radius: 10px;
+            }
+
+            .topic-content {
+                padding: 1.5rem;
+            }
+
+            .welcome {
+                padding: 1.5rem;
+            }
+
+            .ranking-section {
+                padding: 1.5rem;
+            }
+
+            .ranking-item {
+                flex-wrap: wrap;
+            }
+
+            .ranking-item .rank-buttons {
+                width: 100%;
+                justify-content: flex-end;
+                margin-top: 0.25rem;
+            }
+
+            .nav-buttons {
+                padding: 0 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.15rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Business Strategy Topics</h1>
+        <div class="subtitle">IESE Business School</div>
+    </div>
+
+    <div class="progress-bar" id="progressBar" style="display: none;">
+        <div class="progress-track">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+        <div class="progress-text" id="progressText">0 / 8</div>
+    </div>
+
+    <!-- Welcome -->
+    <div class="section active" id="section-welcome">
+        <div class="welcome">
+            <h2>Escull els Teus 3 Temes Principals</h2>
+            <p>Benvingut/da a l'enquesta de selecció de temes d'estratègia empresarial. Llegeix la descripció de cada tema i després tria els 3 que t'interessen més.</p>
+
+            <div class="instructions">
+                <p><strong>Com funciona:</strong></p>
+                <p>1. Llegeix la descripció de cadascun dels 8 temes</p>
+                <p>2. Selecciona els teus 3 preferits i ordena'ls (1 = el que més t'interessa)</p>
+                <p>3. Envia la teva selecció</p>
+            </div>
+
+            <div class="name-input">
+                <label for="studentName">El teu nom complet</label>
+                <input type="text" id="studentName" placeholder="Nom i cognoms" autocomplete="name">
+                <span class="error" id="nameError">Si us plau, introdueix el teu nom</span>
+            </div>
+
+            <div style="margin-top: 1.5rem; text-align: right;">
+                <button class="btn btn-primary" onclick="startSurvey()">Comencem &rarr;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Topic 1: Braun -->
+    <div class="section" id="section-topic-1">
+        <div class="topic-card">
+            <div class="topic-number">Tema 1 de 8</div>
+            <div class="topic-content">
+                <div class="category">Bens de consum durables</div>
+                <h2>Small Home Appliances: Braun</h2>
+                <div class="description">
+                    <p>Braun, la icònica marca alemanya fundada el 1921, va revolucionar el mercat de petits electrodomèstics amb el seu disseny funcionalista i la seva enginyeria de precisió. Des de les maquinetes d'afaitar fins als robots de cuina, Braun va establir l'estàndard de qualitat al segment premium del mercat.</p>
+                    <p>Aquest cas examina l'estratègia de Braun en un mercat de béns durables altament competitiu: com mantenir el posicionament premium davant la pressió de marques asiàtiques de baix cost, la gestió del cicle de vida del producte, i les decisions d'innovació incremental versus disruptiva.</p>
+                    <p>Analitzarem la integració dins del grup Procter & Gamble (adquirida el 1967 per Gillette, que al seu torn va ser adquirida per P&G el 2005), les tensions entre identitat de marca i sinergies corporatives, i com una empresa de béns durables pot crear avantatges competitius sostenibles quan els productes duren anys.</p>
+                </div>
+                <div class="key-questions">
+                    <h4>Qüestions clau</h4>
+                    <ul>
+                        <li>Com justificar un preu premium en electrodomèstics quan la funcionalitat bàsica està commodititzada?</li>
+                        <li>Quin paper juga el disseny com a barrera d'entrada?</li>
+                        <li>Com gestionar una marca icònica dins d'un gran conglomerat sense perdre la seva essència?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Topic 2: Chupa Chups -->
+    <div class="section" id="section-topic-2">
+        <div class="topic-card">
+            <div class="topic-number">Tema 2 de 8</div>
+            <div class="topic-content">
+                <div class="category">Llançament i internacionalització</div>
+                <h2>Llançament de Chupa Chups als Estats Units</h2>
+                <div class="description">
+                    <p>Chupa Chups, nascuda a Barcelona el 1958 de la mà d'Enric Bernat, va aconseguir un èxit extraordinari a Europa i Àsia amb un producte aparentment senzill: un caramel amb pal. Amb el logotip dissenyat per Salvador Dalí i una distribució que va arribar a 150 països, Chupa Chups es va convertir en un fenomen global.</p>
+                    <p>No obstant això, el mercat nord-americà va representar un repte únic. El cas analitza l'estratègia d'entrada als EUA: un mercat dominat per gegants com Hershey's, Mars i Wrigley, amb canals de distribució consolidats, preferències de consum diferents i una cultura de llaminadures pròpia.</p>
+                    <p>Estudiarem les decisions sobre posicionament (producte infantil versus aspiracional), estratègia de preus, selecció de canals, adaptació versus estandardització del producte, i les lliçons sobre què passa quan una marca que domina a casa intenta conquerir el mercat més competitiu del món.</p>
+                </div>
+                <div class="key-questions">
+                    <h4>Qüestions clau</h4>
+                    <ul>
+                        <li>Per què un producte d'èxit global pot fracassar en un mercat específic?</li>
+                        <li>Quan s'ha d'adaptar el producte al mercat local versus mantenir l'estandardització?</li>
+                        <li>Com competir amb gegants locals que controlen la distribució?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Topic 3: Marcilla -->
+    <div class="section" id="section-topic-3">
+        <div class="topic-card">
+            <div class="topic-number">Tema 3 de 8</div>
+            <div class="topic-content">
+                <div class="category">Estratègia de commodities</div>
+                <h2>Commodity Strategy: Marcilla Coffee</h2>
+                <div class="description">
+                    <p>El cafè és una de les commodities més comercialitzades del món, amb preus determinats pels mercats internacionals i una cadena de subministrament que connecta productors de països en desenvolupament amb consumidors globals. En aquest context, com pot una marca crear valor més enllà del preu de la matèria primera?</p>
+                    <p>Marcilla, marca espanyola amb més d'un segle d'història, va afrontar el repte de competir en un mercat on el producte base és essencialment idèntic. El cas examina les estratègies per escapar de la trampa de la commoditització: la creació de valor a través del blend, el torrat, el packaging, la marca i l'experiència de consum.</p>
+                    <p>Analitzarem la competència amb marques blanques (que capturen una quota creixent), l'arribada de nous formats (càpsules, specialty coffee), la gestió de la volatilitat dels preus del cafè verd, i les decisions estratègiques sobre integració vertical versus especialització.</p>
+                </div>
+                <div class="key-questions">
+                    <h4>Qüestions clau</h4>
+                    <ul>
+                        <li>Com diferenciar un producte quan la matèria primera és una commodity?</li>
+                        <li>Quina és l'estratègia correcta davant l'auge de les marques blanques?</li>
+                        <li>Com respondre a la disrupció de les càpsules (Nespresso) sense canibalitzar el negoci principal?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Topic 4: Frito Lay -->
+    <div class="section" id="section-topic-4">
+        <div class="topic-card">
+            <div class="topic-number">Tema 4 de 8</div>
+            <div class="topic-content">
+                <div class="category">FMCG / Gran consum</div>
+                <h2>Fast-Moving Consumer Goods: Frito-Lay</h2>
+                <div class="description">
+                    <p>Frito-Lay, la divisió de snacks de PepsiCo, és un dels exemples més reeixits d'excel·lència operativa en gran consum. Amb marques com Lay's, Doritos, Cheetos i Ruffles, domina el mercat de snacks salats amb quotes de mercat superiors al 60% als EUA.</p>
+                    <p>El cas explora el que molts consideren la millor xarxa de distribució directa (DSD, Direct Store Delivery) del món: una flota de milers de camions que visiten centenars de milers de punts de venda setmanalment. Aquesta infraestructura logística és alhora el seu major avantatge competitiu i el seu major cost.</p>
+                    <p>Estudiarem l'estratègia de portfolio de marques, la innovació constant en sabors i formats, la gestió de la distribució com a arma competitiva, i el dilema de com créixer quan ja domines el mercat. També abordarem els reptes actuals: la tendència cap a l'alimentació saludable, la pressió reguladora sobre snacks no saludables, i com un gegant del snack pot reinventar-se.</p>
+                </div>
+                <div class="key-questions">
+                    <h4>Qüestions clau</h4>
+                    <ul>
+                        <li>Com convertir la distribució en un avantatge competitiu insuperable?</li>
+                        <li>Quina és l'estratègia correcta quan controles el 60% del mercat?</li>
+                        <li>Com respondre a la tendència de salut i benestar sense destruir el negoci core?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Topic 5: Tabacalera -->
+    <div class="section" id="section-topic-5">
+        <div class="topic-card">
+            <div class="topic-number">Tema 5 de 8</div>
+            <div class="topic-content">
+                <div class="category">Antic monopoli estatal</div>
+                <h2>Tabacalera / Altadis</h2>
+                <div class="description">
+                    <p>Tabacalera va ser durant dècades el monopoli estatal espanyol del tabac. La seva transformació, des d'una empresa pública burocràtica fins a convertir-se en Altadis, un grup internacional cotitzat i finalment adquirit per Imperial Tobacco, és un cas d'estudi fascinant sobre privatització, liberalització i transformació corporativa.</p>
+                    <p>El cas analitza els reptes únics d'un antic monopoli: com competir quan s'obren les fronteres, com gestionar una cultura organitzativa formada durant dècades de protecció, com transformar una empresa acostumada a no tenir competència en una organització àgil i orientada al mercat.</p>
+                    <p>Estudiarem la fusió amb la francesa Seita per crear Altadis, l'estratègia d'internacionalització, les decisions de portfolio (cigarrets, puros, distribució), la gestió dels reptes regulatoris creixents contra el tabac, i les lliçons universals sobre com els antics monopolis poden (o no) sobreviure a la liberalització.</p>
+                </div>
+                <div class="key-questions">
+                    <h4>Qüestions clau</h4>
+                    <ul>
+                        <li>Quins avantatges i desavantatges hereta un antic monopoli quan es privatitza?</li>
+                        <li>Com es transforma una cultura corporativa construïda sobre la protecció estatal?</li>
+                        <li>És la fusió internacional la millor resposta a la liberalització?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Topic 6: Telefónica Terra Lycos -->
+    <div class="section" id="section-topic-6">
+        <div class="topic-card">
+            <div class="topic-number">Tema 6 de 8</div>
+            <div class="topic-content">
+                <div class="category">Antic monopoli estatal / Turnaround digital</div>
+                <h2>Telefónica 1: Terra Lycos Turnaround</h2>
+                <div class="description">
+                    <p>A finals dels anys 90, Telefónica va fer una aposta ambiciosa pel món d'internet amb la creació de Terra Networks. L'adquisició de Lycos el 2000 per 12.500 milions de dòlars va ser una de les operacions més grans de l'era puntocom, just abans de l'esclat de la bombolla.</p>
+                    <p>El cas examina un dels turnarounds més complexos de la història empresarial espanyola: com gestionar una inversió multimilionària que perd valor dramàticament, quines opcions estratègiques queden quan el mercat s'enfonsa, i com un gran grup de telecomunicacions hauria d'integrar (o desinvertir) els seus actius digitals.</p>
+                    <p>Analitzarem les decisions presses sota pressió extrema, la gestió de les expectatives dels inversors i dels mercats, el dilema entre persistir en l'estratègia original o acceptar les pèrdues i pivotar, i les lliçons sobre diversificació, timing d'entrada al mercat, i els perills de la "nova economia".</p>
+                </div>
+                <div class="key-questions">
+                    <h4>Qüestions clau</h4>
+                    <ul>
+                        <li>Com gestionar una adquisició que perd el 90% del seu valor en dos anys?</li>
+                        <li>Quan s'ha de persistir en una estratègia versus acceptar les pèrdues?</li>
+                        <li>Quines lliçons de Terra Lycos segueixen sent rellevants per a les inversions tecnològiques d'avui?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Topic 7: Telefónica Catalonia -->
+    <div class="section" id="section-topic-7">
+        <div class="topic-card">
+            <div class="topic-number">Tema 7 de 8</div>
+            <div class="topic-content">
+                <div class="category">Imatge de marca i relacions institucionals</div>
+                <h2>Telefónica 2: Recuperació de la Imatge de Marca i Relacions Institucionals a Catalunya</h2>
+                <div class="description">
+                    <p>Telefónica, com a antic monopoli estatal, va heretar una percepció particular a Catalunya: una empresa associada amb el centralisme madrileny, percebuda com a distant i fins i tot hostil al territori. En un mercat on l'alternativa local (les futures operadores catalanes) capitalitzava el sentiment de proximitat, Telefónica necessitava reconstruir la seva imatge.</p>
+                    <p>El cas analitza una estratègia de recuperació de marca en un context politicosocial complex: com una gran corporació pot reconnectar amb un territori on és percebuda negativament, les accions de relacions institucionals, el patrocini estratègic, la localització del servei i la comunicació, i el delicat equilibri entre adaptar-se al context local sense alienar altres mercats.</p>
+                    <p>Estudiarem les tàctiques desplegades (des del patrocini cultural fins a la contractació de directius locals), l'eficàcia de cada acció, i les lliçons més àmplies sobre gestió de marca en contextos on les dimensions polítiques i identitàries pesen tant o més que la qualitat del servei.</p>
+                </div>
+                <div class="key-questions">
+                    <h4>Qüestions clau</h4>
+                    <ul>
+                        <li>Com pot una empresa "de fora" guanyar-se la confiança d'un territori amb identitat pròpia forta?</li>
+                        <li>Fins a quin punt les relacions institucionals i el patrocini poden canviar la percepció de marca?</li>
+                        <li>Com gestionar una marca nacional en un context de tensions territorials?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Topic 8: Personal Failures -->
+    <div class="section" id="section-topic-8">
+        <div class="topic-card">
+            <div class="topic-number">Tema 8 de 8</div>
+            <div class="topic-content">
+                <div class="category">Lideratge i reflexió personal</div>
+                <h2>Els Meus Fracassos Personals: Lliçons Apreses</h2>
+                <div class="description">
+                    <p>En el món dels negocis, es parla molt dels èxits però poc dels fracassos. I tanmateix, la majoria dels directius experimentats admetran que han après molt més dels seus errors que dels seus encerts. Aquest tema trenca amb la convenció acadèmica per oferir una reflexió honesta i personal.</p>
+                    <p>A través d'experiències reals de fracàs empresarial, decisions equivocades, oportunitats perdudes i errors de judici, explorarem les lliçons que només s'aprenen quan les coses van malament. Des d'inversions fallides fins a errors de gestió d'equips, des d'estratègies que semblaven brillants sobre el paper però van fracassar en l'execució.</p>
+                    <p>Aquesta sessió és única perquè combina la teoria estratègica amb la vulnerabilitat personal. Analitzarem patrons comuns en els fracassos empresarials, els biaixos cognitius que ens porten a prendre males decisions, la importància de la resiliència, i com construir una cultura on els errors siguin font d'aprenentatge i no de càstig.</p>
+                </div>
+                <div class="key-questions">
+                    <h4>Qüestions clau</h4>
+                    <ul>
+                        <li>Quins patrons es repeteixen en les decisions empresarials errònies?</li>
+                        <li>Com podem crear sistemes que detectin errors a temps?</li>
+                        <li>Quin és el valor real del fracàs en el desenvolupament d'un líder?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ranking -->
+    <div class="section" id="section-ranking">
+        <div class="ranking-section">
+            <h2>Selecciona i Ordena els Teus 3 Temes Preferits</h2>
+            <p>Per a cada tema, clica el número (1, 2 o 3) per indicar el teu ordre de preferència. El número 1 indica el tema que més t'interessa.</p>
+
+            <ul class="ranking-list" id="rankingList">
+                <li class="ranking-item" data-topic="1">
+                    <div class="rank-badge">-</div>
+                    <span class="rank-title">1. Small Home Appliances: Braun</span>
+                    <div class="rank-buttons">
+                        <button class="rank-btn" data-rank="1" onclick="setRank(1, 1)">1</button>
+                        <button class="rank-btn" data-rank="2" onclick="setRank(1, 2)">2</button>
+                        <button class="rank-btn" data-rank="3" onclick="setRank(1, 3)">3</button>
+                    </div>
+                </li>
+                <li class="ranking-item" data-topic="2">
+                    <div class="rank-badge">-</div>
+                    <span class="rank-title">2. Chupa Chups als EUA</span>
+                    <div class="rank-buttons">
+                        <button class="rank-btn" data-rank="1" onclick="setRank(2, 1)">1</button>
+                        <button class="rank-btn" data-rank="2" onclick="setRank(2, 2)">2</button>
+                        <button class="rank-btn" data-rank="3" onclick="setRank(2, 3)">3</button>
+                    </div>
+                </li>
+                <li class="ranking-item" data-topic="3">
+                    <div class="rank-badge">-</div>
+                    <span class="rank-title">3. Commodity Strategy: Marcilla Coffee</span>
+                    <div class="rank-buttons">
+                        <button class="rank-btn" data-rank="1" onclick="setRank(3, 1)">1</button>
+                        <button class="rank-btn" data-rank="2" onclick="setRank(3, 2)">2</button>
+                        <button class="rank-btn" data-rank="3" onclick="setRank(3, 3)">3</button>
+                    </div>
+                </li>
+                <li class="ranking-item" data-topic="4">
+                    <div class="rank-badge">-</div>
+                    <span class="rank-title">4. FMCG: Frito-Lay</span>
+                    <div class="rank-buttons">
+                        <button class="rank-btn" data-rank="1" onclick="setRank(4, 1)">1</button>
+                        <button class="rank-btn" data-rank="2" onclick="setRank(4, 2)">2</button>
+                        <button class="rank-btn" data-rank="3" onclick="setRank(4, 3)">3</button>
+                    </div>
+                </li>
+                <li class="ranking-item" data-topic="5">
+                    <div class="rank-badge">-</div>
+                    <span class="rank-title">5. Tabacalera / Altadis</span>
+                    <div class="rank-buttons">
+                        <button class="rank-btn" data-rank="1" onclick="setRank(5, 1)">1</button>
+                        <button class="rank-btn" data-rank="2" onclick="setRank(5, 2)">2</button>
+                        <button class="rank-btn" data-rank="3" onclick="setRank(5, 3)">3</button>
+                    </div>
+                </li>
+                <li class="ranking-item" data-topic="6">
+                    <div class="rank-badge">-</div>
+                    <span class="rank-title">6. Telefónica: Terra Lycos Turnaround</span>
+                    <div class="rank-buttons">
+                        <button class="rank-btn" data-rank="1" onclick="setRank(6, 1)">1</button>
+                        <button class="rank-btn" data-rank="2" onclick="setRank(6, 2)">2</button>
+                        <button class="rank-btn" data-rank="3" onclick="setRank(6, 3)">3</button>
+                    </div>
+                </li>
+                <li class="ranking-item" data-topic="7">
+                    <div class="rank-badge">-</div>
+                    <span class="rank-title">7. Telefónica: Imatge de Marca a Catalunya</span>
+                    <div class="rank-buttons">
+                        <button class="rank-btn" data-rank="1" onclick="setRank(7, 1)">1</button>
+                        <button class="rank-btn" data-rank="2" onclick="setRank(7, 2)">2</button>
+                        <button class="rank-btn" data-rank="3" onclick="setRank(7, 3)">3</button>
+                    </div>
+                </li>
+                <li class="ranking-item" data-topic="8">
+                    <div class="rank-badge">-</div>
+                    <span class="rank-title">8. Fracassos Personals: Lliçons Apreses</span>
+                    <div class="rank-buttons">
+                        <button class="rank-btn" data-rank="1" onclick="setRank(8, 1)">1</button>
+                        <button class="rank-btn" data-rank="2" onclick="setRank(8, 2)">2</button>
+                        <button class="rank-btn" data-rank="3" onclick="setRank(8, 3)">3</button>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="ranking-summary">
+                <h4>La teva selecció</h4>
+                <div class="slot">
+                    <span class="slot-number">1.</span>
+                    <span class="slot-name" id="slot1">Encara no seleccionat</span>
+                </div>
+                <div class="slot">
+                    <span class="slot-number">2.</span>
+                    <span class="slot-name" id="slot2">Encara no seleccionat</span>
+                </div>
+                <div class="slot">
+                    <span class="slot-number">3.</span>
+                    <span class="slot-name" id="slot3">Encara no seleccionat</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn btn-outline" onclick="goToSection('section-topic-8')">&larr; Tornar als temes</button>
+            <button class="btn btn-gold" id="submitBtn" onclick="submitSurvey()" disabled>Enviar selecció &rarr;</button>
+        </div>
+    </div>
+
+    <!-- Confirmation -->
+    <div class="section" id="section-confirmation">
+        <div class="confirmation">
+            <div class="check-icon">&#10003;</div>
+            <h2>Gràcies!</h2>
+            <p>La teva selecció s'ha enviat correctament.</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--gray-400);">Pots tancar aquesta pàgina.</p>
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Nav buttons for topic pages (injected dynamically) -->
+
+    <script>
+        // --- State ---
+        const rankings = {}; // { topicNumber: rank }
+        const topicNames = {
+            1: 'Small Home Appliances: Braun',
+            2: 'Chupa Chups als EUA',
+            3: 'Commodity Strategy: Marcilla Coffee',
+            4: 'FMCG: Frito-Lay',
+            5: 'Tabacalera / Altadis',
+            6: 'Telefónica: Terra Lycos Turnaround',
+            7: 'Telefónica: Imatge de Marca a Catalunya',
+            8: 'Fracassos Personals: Lliçons Apreses'
+        };
+
+        const sections = [
+            'section-welcome',
+            'section-topic-1', 'section-topic-2', 'section-topic-3', 'section-topic-4',
+            'section-topic-5', 'section-topic-6', 'section-topic-7', 'section-topic-8',
+            'section-ranking'
+        ];
+
+        let currentSection = 'section-welcome';
+
+        // --- Google Apps Script URL ---
+        // Replace this with your deployed Google Apps Script web app URL
+        const SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL';
+
+        // --- Navigation ---
+        function goToSection(sectionId) {
+            document.getElementById(currentSection).classList.remove('active');
+            document.getElementById(sectionId).classList.add('active');
+            currentSection = sectionId;
+            window.scrollTo(0, 0);
+            updateProgress();
+            injectNavButtons();
+        }
+
+        function updateProgress() {
+            const idx = sections.indexOf(currentSection);
+            if (idx <= 0) {
+                document.getElementById('progressBar').style.display = 'none';
+                return;
+            }
+            document.getElementById('progressBar').style.display = 'flex';
+            const total = sections.length - 1; // exclude welcome
+            const pct = (idx / total) * 100;
+            document.getElementById('progressFill').style.width = pct + '%';
+
+            if (currentSection === 'section-ranking') {
+                document.getElementById('progressText').textContent = 'Selecció';
+            } else {
+                document.getElementById('progressText').textContent = idx + ' / 8';
+            }
+        }
+
+        function injectNavButtons() {
+            // Remove any existing injected nav
+            document.querySelectorAll('.nav-buttons-injected').forEach(el => el.remove());
+
+            const idx = sections.indexOf(currentSection);
+            if (idx <= 0 || currentSection === 'section-ranking' || currentSection === 'section-confirmation') return;
+
+            const prev = idx > 1 ? sections[idx - 1] : null;
+            const next = sections[idx + 1];
+
+            const nav = document.createElement('div');
+            nav.className = 'nav-buttons nav-buttons-injected';
+            nav.innerHTML = `
+                <button class="btn btn-outline" onclick="goToSection('${prev || sections[0]}')">&larr; ${idx === 1 ? 'Inici' : 'Anterior'}</button>
+                <div class="right">
+                    ${currentSection === 'section-topic-8' ? `<button class="btn btn-gold" onclick="goToSection('section-ranking')">Seleccionar els meus 3 &rarr;</button>` : `<button class="btn btn-primary" onclick="goToSection('${next}')">Següent &rarr;</button>`}
+                </div>
+            `;
+
+            const card = document.querySelector('#' + currentSection + ' .topic-card');
+            card.parentNode.insertBefore(nav, card.nextSibling);
+        }
+
+        // --- Welcome ---
+        function startSurvey() {
+            const name = document.getElementById('studentName').value.trim();
+            if (!name) {
+                document.getElementById('nameError').style.display = 'block';
+                document.getElementById('studentName').focus();
+                return;
+            }
+            document.getElementById('nameError').style.display = 'none';
+            goToSection('section-topic-1');
+        }
+
+        // Enter key on name field
+        document.getElementById('studentName').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') startSurvey();
+        });
+
+        // --- Ranking ---
+        function setRank(topic, rank) {
+            // If this rank is already assigned to another topic, remove it
+            for (const [t, r] of Object.entries(rankings)) {
+                if (r === rank && parseInt(t) !== topic) {
+                    delete rankings[t];
+                    updateRankingUI(parseInt(t));
+                }
+            }
+
+            // Toggle: if clicking same rank on same topic, remove it
+            if (rankings[topic] === rank) {
+                delete rankings[topic];
+            } else {
+                rankings[topic] = rank;
+            }
+
+            updateRankingUI(topic);
+            updateSummary();
+            updateSubmitButton();
+        }
+
+        function updateRankingUI(topic) {
+            const item = document.querySelector(`.ranking-item[data-topic="${topic}"]`);
+            const badge = item.querySelector('.rank-badge');
+            const buttons = item.querySelectorAll('.rank-btn');
+
+            if (rankings[topic]) {
+                item.classList.add('selected');
+                badge.textContent = rankings[topic];
+                buttons.forEach(btn => {
+                    btn.classList.toggle('active', parseInt(btn.dataset.rank) === rankings[topic]);
+                });
+            } else {
+                item.classList.remove('selected');
+                badge.textContent = '-';
+                buttons.forEach(btn => btn.classList.remove('active'));
+            }
+        }
+
+        function updateSummary() {
+            for (let r = 1; r <= 3; r++) {
+                const slot = document.getElementById('slot' + r);
+                const topic = Object.entries(rankings).find(([t, rank]) => rank === r);
+                if (topic) {
+                    slot.textContent = topicNames[topic[0]];
+                    slot.classList.add('filled');
+                } else {
+                    slot.textContent = 'Encara no seleccionat';
+                    slot.classList.remove('filled');
+                }
+            }
+        }
+
+        function updateSubmitButton() {
+            const selectedCount = Object.keys(rankings).length;
+            const hasAll3 = [1, 2, 3].every(r => Object.values(rankings).includes(r));
+            document.getElementById('submitBtn').disabled = !hasAll3;
+        }
+
+        // --- Submit ---
+        async function submitSurvey() {
+            const name = document.getElementById('studentName').value.trim();
+            const hasAll3 = [1, 2, 3].every(r => Object.values(rankings).includes(r));
+
+            if (!name || !hasAll3) return;
+
+            // Build payload
+            const payload = {
+                name: name,
+                timestamp: new Date().toISOString(),
+                rank1_topic: '',
+                rank2_topic: '',
+                rank3_topic: ''
+            };
+
+            for (const [topic, rank] of Object.entries(rankings)) {
+                payload[`rank${rank}_topic`] = topicNames[topic];
+            }
+
+            // Show loading
+            document.getElementById('loadingOverlay').classList.add('active');
+
+            try {
+                if (SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL') {
+                    // Demo mode: just show confirmation
+                    await new Promise(r => setTimeout(r, 800));
+                } else {
+                    await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                }
+
+                document.getElementById('loadingOverlay').classList.remove('active');
+                document.getElementById('progressBar').style.display = 'none';
+                goToSection('section-confirmation');
+
+            } catch (err) {
+                document.getElementById('loadingOverlay').classList.remove('active');
+                alert('Hi ha hagut un error. Si us plau, torna-ho a intentar.');
+                console.error(err);
+            }
+        }
+    </script>
+</body>
+</html>
